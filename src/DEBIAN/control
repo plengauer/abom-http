@@ -1,0 +1,8 @@
+Package: abom-http
+Version: __VERSION__
+Architecture: all
+Depends: dash | bash, coreutils, util-linux
+Priority: extra
+Maintainer: Philipp Lengauer <p.lengauer@gmail.com>
+Homepage: https://github.com/plengauer/abom-http
+Description: A simple http server to both serve a directory and its contents as is as well as to dynamically generate http responses

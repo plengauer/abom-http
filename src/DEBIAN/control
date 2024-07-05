@@ -1,7 +1,7 @@
 Package: abom-http
 Version: __VERSION__
 Architecture: all
-Depends: dash | bash, coreutils, util-linux
+Depends: dash | bash, coreutils, util-linux, ncat
 Priority: extra
 Maintainer: Philipp Lengauer <p.lengauer@gmail.com>
 Homepage: https://github.com/plengauer/abom-http

@@ -4,4 +4,5 @@ generator="$2"
 if ! type otel4netcat 1> /dev/null 2> /dev/null; then
   otel4netcat() { "$@"; }
 fi
-otel4netcat ncat -l -w 60 -k -c "sh /usr/share/abomhttp/serve '$directory' '$generator'"
+export PATH="/usr/share/abomhttp:$PATH"
+otel4netcat ncat -l -w 60 -k -c "abomhttp_serve '$directory' '$generator'"

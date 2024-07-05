@@ -1,0 +1,57 @@
+#!/bin/sh -e
+directory="$1"
+handler="$2"
+
+serve_error() {
+  cat > /dev/null
+  print_status "$@"
+  printf "\r\n"
+}
+
+serve_via_handler() {
+  local handler="$1"
+  local method="$2"
+  local path_and_query="$3"
+  if ! [ -x "$handler" ] && ! [ -x "$(which "$handler")" ]; then return 1; fi
+  sh -c "$1"' ''"$@"' "$handler" "$method" "$path_and_query" || serve_error 500 Internal Error
+}
+
+print_status() {
+  printf "HTTP/1.1 $@\r\n"
+}
+
+print_header() {
+  printf "$1: $2\r\n"
+}
+
+read -r method path_and_query protocol
+while read -r line; do
+  line="$(printf "$line" | tr -d '\r')
+  if [ "${#line}" = 0 ]; then break; fi
+done
+
+path="$(printf "$path_and_query" | cut -d ? -f 1)"
+if printf "$path" | tr / '\n' | grep -qF '..'; then
+  serve_error 403 Forbidden
+  exit 0
+fi
+
+file="$directory/$path"
+
+if [ -x "$file" ]; then
+  serve_via_handler "$file" "$method" "$path_and_query" || serve_error 500 Internal Error
+else
+  case "$method" in
+    GET) print_status 200 OK && print_header content-length "$(stat --printf="%s" "$file")" && print_header content-encoding identity && printf '\r\n' && cat "$file" || serve_via_handler "$handler" "$method" "$path_and_query" || serve_error 404 Not Found;;
+    HEAD) print_status 200 && printf '\r\n';;
+    POST) cat > "$file" && print_status 200 OK && printf '\r\n' || serve_via_handler "$handler" "$method" "$path_and_query" || serve_error 403 Forbidden;;
+    PUT) mkdir -p "$(dirname "$path")" && touch "$file" && print_status 200 OK && printf '\r\n' || serve_via_handler "$handler" "$method" "$path_and_query" || serve_error 403 Forbidden;;
+    DELETE) rm -rf "$file" && print_status 200 OK && printf '\r\n' || serve_via_handler "$handler" "$method" "$path_and_query" || [ -f "$file" ] && serve_error 404 Not Found || serve_error 403 Forbidden;;
+    *) serve_error 405 Method Not Allowed;;
+  esac
+fi | {
+  read -r line
+  echo "$line"
+  print_header server: abom-http
+  cat
+}

@@ -59,5 +59,6 @@ fi | {
   read -r line
   echo "$line"
   print_header server abom-http
+  print_header connection close
   cat
 }

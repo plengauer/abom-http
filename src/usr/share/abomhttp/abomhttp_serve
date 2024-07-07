@@ -42,12 +42,16 @@ case "$file_real" in
   *) file_real="";;
 esac
 
-echo -n "serving $path_and_query..." >&2
+pipe="$(mktemp -u)"
+mkfifo "$pipe"
 if [ -n "$length" ]; then
   head -c "$length"
 else
   cat
-fi | if printf "$path" | tr / '\n' | grep -qF '..'; then
+fi > "$pipe" &
+
+echo -n "serving $path_and_query..." >&2
+if printf "$path" | tr / '\n' | grep -qF '..'; then
   serve_error 403 Forbidden
 elif ! [ -d "$file_real" ] && [ -x "$file_real" ]; then
   serve_via_handler "$file_real" "$method" "$path_and_query" || serve_error 500 Internal Error
@@ -60,7 +64,7 @@ else
     DELETE) rm -rf "$file" && print_status 200 OK && printf '\r\n' || serve_via_handler "$handler" "$method" "$path_and_query" || [ -f "$file" ] && serve_error 404 Not Found || serve_error 403 Forbidden;;
     *) serve_error 405 Method Not Allowed;;
   esac
-fi | {
+fi < "$pipe" | {
   read -r line
   echo "$line"
   print_header server abom-http
@@ -68,3 +72,5 @@ fi | {
   cat
 }
 echo " done" >&2
+
+rm "$pipe"

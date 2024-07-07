@@ -26,15 +26,14 @@ print_header() {
 read -r method path_and_query protocol
 while read -r line; do
   line="$(printf "$line" | tr -d '\r')"
+  case "$(printf "$line" | cut -d : -f 1 | tr '[:upper:]' '[:lower:]')" in
+    content-length) length="$(printf "$line" | cut -d : -f 2 | tr -d ' ')";;
+    *);;
+  esac
   if [ "${#line}" = 0 ]; then break; fi
 done
 
 path="$(printf "$path_and_query" | cut -d ? -f 1)"
-if printf "$path" | tr / '\n' | grep -qF '..'; then
-  serve_error 403 Forbidden
-  exit 0
-fi
-
 file="$directory/$path"
 file_real="$file"
 while ! [ -e "$file_real" ]; do file_real="$(dirname "$file_real")"; done
@@ -43,7 +42,13 @@ case "$file_real" in
   *) file_real="";;
 esac
 
-if ! [ -d "$file_real" ] && [ -x "$file_real" ]; then
+if [ -n "$length" ]; then
+  head -c "$length"
+else
+  cat
+fi | if printf "$path" | tr / '\n' | grep -qF '..'; then
+  serve_error 403 Forbidden
+elif ! [ -d "$file_real" ] && [ -x "$file_real" ]; then
   serve_via_handler "$file_real" "$method" "$path_and_query" || serve_error 500 Internal Error
 else
   case "$method" in

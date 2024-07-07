@@ -15,6 +15,7 @@ chmod +x "$directory/foo/fail"
 
 abomhttp "$port" "$directory" &
 pid="$!"
+sleep 3
 [ "hello world" = "$(curl http://127.0.0.1:"$port"/foo/bar)" ]
 curl http://127.0.0.1:"$port"/baz >&2 | grep -q 404
 [ "hellooooo" = "$(curl -X POST -d 'hellooooo' http://127.0.0.1:"$port"/foo/echo)" ]

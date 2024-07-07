@@ -9,7 +9,7 @@ echo hello world > "$directory/foo/bar"
 
 abomhttp "$port" "$directory" &
 pid="$!"
-[ "hello world" "$(curl http://127.0.0.1:"$port"/foo/bar)" ]
+[ "hello world" = "$(curl http://127.0.0.1:"$port"/foo/bar)" ]
 curl http://127.0.0.1:"$port"/bar >&2 | grep -q 404
 kill -9 "$pid"
 wait "$pid"

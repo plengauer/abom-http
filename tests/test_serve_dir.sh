@@ -7,7 +7,6 @@ touch "$directory/foo/bar"
 touch "$directory/foo/echo"
 echo hello world > "$directory/foo/bar"
 echo '#!/bin/sh -e
-exit 1
 /bin/echo -e -n "HTTP/1.1 200 OK\r\n\r\n" && cat' > "$directory/foo/echo"
 chmod +x "$directory/foo/echo"
 echo '#!/bin/sh -e

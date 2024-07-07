@@ -33,6 +33,7 @@ while read -r line; do
   if [ "${#line}" = 0 ]; then break; fi
 done
 
+echo -n "serving $path_and_query"..." >&2
 path="$(printf "$path_and_query" | cut -d ? -f 1)"
 file="$directory/$path"
 file_real="$file"
@@ -66,3 +67,4 @@ fi | {
   print_header connection close
   cat
 }
+echo " done" >&2

@@ -1,4 +1,5 @@
 #!/bin/sh -e
+set -x
 directory="$1"
 handler="$2"
 

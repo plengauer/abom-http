@@ -37,9 +37,15 @@ if printf "$path" | tr / '\n' | grep -qF '..'; then
 fi
 
 file="$directory/$path"
+file_real="$file"
+while ! [ -e "$file_real" ]; do real_file="$(dirname "$file_real"); done
+case "$file_real" in
+  "$directory/*") ;;
+  *) file_real="";;
+esac
 
-if [ -x "$file" ]; then
-  serve_via_handler "$file" "$method" "$path_and_query" || serve_error 500 Internal Error
+if [ -x "$file_real" ]; then
+  serve_via_handler "$file_real" "$method" "$path_and_query" || serve_error 500 Internal Error
 else
   case "$method" in
     GET) [ -f "$file" ] && print_status 200 OK && print_header content-length "$(stat --printf="%s" "$file")" && print_header content-encoding identity && printf '\r\n' && cat "$file" || serve_via_handler "$handler" "$method" "$path_and_query" || serve_error 404 Not Found;;

@@ -17,10 +17,10 @@ abomhttp "$port" "$directory" &
 pid="$!"
 sleep 3
 [ "hello world" = "$(curl -v http://127.0.0.1:"$port"/foo/bar)" ]
-curl -v http://127.0.0.1:"$port"/foo/baz 2>&1 | grep -q 404
+curl -v http://127.0.0.1:"$port"/foo/baz 2>&1 | tee /dev/stderr | grep -q 404
 [ "hellooooo" = "$(curl -v -X POST -d 'hellooooo' http://127.0.0.1:"$port"/foo/echo)" ]
 [ "hellooooo sub" = "$(curl -v -X POST -d 'hellooooo sub' http://127.0.0.1:"$port"/foo/echo/sub)" ]
-curl -v http://127.0.0.1:"$port"/foo/fail 2>&1 | grep -q 500
-curl -v http://127.0.0.1:"$port"/../foo 2>&1 | grep -q 403
+curl -v http://127.0.0.1:"$port"/foo/fail 2>&1 | tee /dev/stderr | grep -q 500
+curl -v http://127.0.0.1:"$port"/../foo 2>&1 | tee /dev/stderr | grep -q 403
 kill -9 "$pid"
 wait "$pid"

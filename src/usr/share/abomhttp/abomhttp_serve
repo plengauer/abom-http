@@ -44,11 +44,7 @@ esac
 
 pipe="$(mktemp -u)"
 mkfifo "$pipe"
-if [ -n "$length" ]; then
-  head -c "$length"
-else
-  cat
-fi > "$pipe" &
+if [ -n "$length" ]; then head -c "$length"; else cat; fi > "$pipe" &
 
 echo -n "serving $path_and_query..." >&2
 if printf "$path" | tr / '\n' | grep -qF '..'; then

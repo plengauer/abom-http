@@ -38,7 +38,7 @@ fi
 
 file="$directory/$path"
 file_real="$file"
-while ! [ -e "$file_real" ]; do real_file="$(dirname "$file_real"); done
+while ! [ -e "$file_real" ]; do real_file="$(dirname "$file_real")"; done
 case "$file_real" in
   "$directory/*") ;;
   *) file_real="";;

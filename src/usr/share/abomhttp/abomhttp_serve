@@ -18,7 +18,7 @@ serve_via_handler() {
 }
 
 print_status() {
-  printf "HTTP/1.1 $*	\r\n"
+  printf "HTTP/1.1 $*\r\n"
 }
 
 print_header() {

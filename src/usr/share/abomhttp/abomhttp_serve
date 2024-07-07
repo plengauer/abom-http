@@ -4,7 +4,6 @@ directory="$1"
 handler="$2"
 
 serve_error() {
-  cat > /dev/null
   print_status "$@"
   printf "\r\n"
 }
@@ -45,7 +44,7 @@ case "$file_real" in
   *) file_real="";;
 esac
 
-if [ -x "$file_real" ]; then
+if ! [ -d "$file_real" ] && [ -x "$file_real" ]; then
   serve_via_handler "$file_real" "$method" "$path_and_query" || serve_error 500 Internal Error
 else
   case "$method" in

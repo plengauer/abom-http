@@ -20,7 +20,7 @@ sleep 3
 curl -v http://127.0.0.1:"$port"/foo/baz 2>&1 | tee /dev/stderr | grep -q 404
 [ "hellooooo" = "$(curl -v -X POST -d 'hellooooo' http://127.0.0.1:"$port"/foo/echo)" ]
 [ "hellooooo sub" = "$(curl -v -X POST -d 'hellooooo sub' http://127.0.0.1:"$port"/foo/echo/sub)" ]
-curl -v http://127.0.0.1:"$port"/foo/fail 2>&1 | tee /dev/stderr | grep -q 500
-curl -v http://127.0.0.1:"$port"/../foo 2>&1 | tee /dev/stderr | grep -q 403
+printf 'GET /foo/fail HTTP/1.1\r\n\r\n' | netcat -w 3 127.0.0.1 "$port" | tee /dev/stderr | grep -q 500
+printf 'GET /../foo HTTP/1.1\r\n\r\n' | netcat -w 3 127.0.0.1 "$port" | tee /dev/stderr | grep -q 403
 kill -9 "$pid"
 wait "$pid"

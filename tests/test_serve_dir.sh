@@ -23,4 +23,3 @@ curl -v http://127.0.0.1:"$port"/foo/baz 2>&1 | tee /dev/stderr | grep -q 404
 printf 'GET /foo/fail HTTP/1.1\r\n\r\n' | netcat -w 3 127.0.0.1 "$port" | tee /dev/stderr | grep -q 500
 printf 'GET /../foo HTTP/1.1\r\n\r\n' | netcat -w 3 127.0.0.1 "$port" | tee /dev/stderr | grep -q 403
 kill -9 "$pid"
-wait "$pid"

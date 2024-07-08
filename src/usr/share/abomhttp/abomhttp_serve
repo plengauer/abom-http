@@ -32,6 +32,8 @@ while read -r line; do
   line="$(printf "$line" | tr -d '\r')"
   case "$(printf "$line" | cut -d : -f 1 | tr '[:upper:]' '[:lower:]')" in
     content-length) length="$(printf "$line" | cut -d : -f 2 | tr -d ' ')";;
+    accept-encoding) accept_encoding="$(printf "$line" | cut -d : -f 2 | tr -d ' ')";;
+    transfer-encoding) transfer_encoding="$(printf "$line" | cut -d : -f 2 | tr -d ' ')";;
     *);;
   esac
   if [ "${#line}" = 0 ]; then break; fi
@@ -49,12 +51,16 @@ esac
 echo -n "serving $path_and_query..." >&2
 if printf "$path" | tr / '\n' | grep -qF '..'; then
   serve_error 403 Forbidden
+elif [ -n "$transfer_encoding" ] && [ "$transfer_encoding" != identity ]; then
+  serve_error 406 Not Acceptable # TODO we should at least allow chunked
+elif [ -n "$accept_encoding" ] && echo "accept_encoding" | tr , '\n' | grep -q 'identity,q=0'; then
+  serve_error 406 Not Acceptable # TODO maybe implement some compression?
 elif ! [ -d "$file_real" ] && [ -x "$file_real" ]; then
   serve_via_handler "$file_real" "$method" "$path_and_query" || serve_error 500 Internal Error
 else
   case "$method" in
     GET) [ -f "$file" ] && print_status 200 OK && print_header content-length "$(stat --printf="%s" "$file")" && print_header content-encoding identity && printf '\r\n' && cat "$file" || serve_via_handler "$handler" "$method" "$path_and_query" || serve_error 404 Not Found;;
-    HEAD) print_status 200 && printf '\r\n';;
+    HEAD) print_status 200 && print_header accept-encoding identity printf '\r\n';;
     POST) [ -w "$file" ] && if [ -n "$length" ]; then head -c "$length" > "$file"; else cat > "$file"; fi && print_status 200 OK && printf '\r\n' || serve_via_handler "$handler" "$method" "$path_and_query" || serve_error 403 Forbidden;;
     PUT) mkdir -p "$(dirname "$path")" && touch "$file" && print_status 200 OK && printf '\r\n' || serve_via_handler "$handler" "$method" "$path_and_query" || serve_error 403 Forbidden;;
     DELETE) rm -rf "$file" && print_status 200 OK && printf '\r\n' || serve_via_handler "$handler" "$method" "$path_and_query" || [ -f "$file" ] && serve_error 404 Not Found || serve_error 403 Forbidden;;

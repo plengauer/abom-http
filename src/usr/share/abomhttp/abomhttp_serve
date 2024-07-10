@@ -1,4 +1,4 @@
-e#!/bin/sh -e
+#!/bin/sh -e
 directory="$1"
 handler="$2"
 

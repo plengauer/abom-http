@@ -53,7 +53,7 @@ if printf "$path" | tr / '\n' | grep -qF '..'; then
   serve_error 403 Forbidden
 elif [ -n "$transfer_encoding" ] && [ "$transfer_encoding" != identity ]; then
   serve_error 406 Not Acceptable # TODO we should at least allow chunked
-elif [ -n "$accept_encoding" ] && echo "accept_encoding" | tr , '\n' | grep -q 'identity,q=0'; then
+elif [ -n "$accept_encoding" ] && echo "$accept_encoding" | tr , '\n' | grep -q 'identity,q=0'; then
   serve_error 406 Not Acceptable # TODO maybe implement some compression?
 elif ! [ -d "$file_real" ] && [ -x "$file_real" ]; then
   serve_via_handler "$file_real" "$method" "$path_and_query" || serve_error 500 Internal Error

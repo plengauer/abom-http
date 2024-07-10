@@ -48,7 +48,7 @@ case "$file_real" in
   *) file_real="";;
 esac
 
-echo -n "serving $path_and_query..." >&2
+echo -n "serving $method $path_and_query..." >&2
 if printf "$path" | tr / '\n' | grep -qF '..'; then
   serve_error 403 Forbidden
 elif [ -n "$transfer_encoding" ] && [ "$transfer_encoding" != identity ]; then

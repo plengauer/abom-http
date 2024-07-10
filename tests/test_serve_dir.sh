@@ -23,7 +23,7 @@ curl -v http://127.0.0.1:"$port"/foo/baz 2>&1 | tee /dev/stderr | grep -q 404
 printf 'GET /foo/fail HTTP/1.1\r\n\r\n' | netcat -w 3 127.0.0.1 "$port" | tee /dev/stderr | grep -q 500
 printf 'GET /../foo HTTP/1.1\r\n\r\n' | netcat -w 3 127.0.0.1 "$port" | tee /dev/stderr | grep -q 403
 printf 'GET /foo/test HTTP/1.1\r\n\r\n' | netcat -w 3 127.0.0.1 "$port" | tee /dev/stderr | grep -q 404
-printf 'PUT /foo/test HTTP/1.1\r\nContent-Length: 11\r\n\r\nhello world' | netcat -w 3 127.0.0.1 "$port" | tee /dev/stderr | grep -q 404
+printf 'PUT /foo/test HTTP/1.1\r\nContent-Length: 11\r\n\r\nhello world' | netcat -w 3 127.0.0.1 "$port" | tee /dev/stderr | grep -q 200
 [ "hello world" = "$(curl -v http://127.0.0.1:"$port"/test)" ]
 printf 'DELETE /foo/test HTTP/1.1\r\n\r\n' | netcat -w 3 127.0.0.1 "$port" | tee /dev/stderr | grep -q 200
 printf 'GET /foo/test HTTP/1.1\r\n\r\n' | netcat -w 3 127.0.0.1 "$port" | tee /dev/stderr | grep -q 404

@@ -60,7 +60,7 @@ elif ! [ -d "$file_real" ] && [ -x "$file_real" ]; then
 else
   case "$method" in
     OPTIONS) print_status 204 No Content && print_header allow 'OPTIONS, HEAD, GET, PUT, DELETE, PATCH, POST' && printf '\r\n';;
-    HEAD) [-f "$file" ] && print_status 204 No Content && print_header content-length "$(stat --printf="%s" "$file")" && print_header content-encoding identity && printf '\r\n' || serve_via_handler "$handler" "$method" "$path_and_query" || serve_error 404 Not Found;;
+    HEAD) [ -f "$file" ] && print_status 204 No Content && print_header content-length "$(stat --printf="%s" "$file")" && print_header content-encoding identity && printf '\r\n' || serve_via_handler "$handler" "$method" "$path_and_query" || serve_error 404 Not Found;;
     GET) [ -f "$file" ] && print_status 200 OK && print_header content-length "$(stat --printf="%s" "$file")" && print_header content-encoding identity && printf '\r\n' && cat "$file" || serve_via_handler "$handler" "$method" "$path_and_query" || serve_error 404 Not Found;;
     PUT) [ -w "$file" ] && ([ -n "$length" ] && head -c "$length" > "$file" && print_status 200 OK && printf '\r\n' || serve_error 400 Bad Request) || serve_via_handler "$handler" "$method" "$path_and_query" || serve_error 403 Forbidden;;
     DELETE) [ -w "$file" ] && rm -rf "$file" && print_status 200 OK && printf '\r\n' || serve_via_handler "$handler" "$method" "$path_and_query" || ! [ -f "$file" ] && serve_error 404 Not Found || serve_error 403 Forbidden;;

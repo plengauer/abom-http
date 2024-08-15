@@ -6,4 +6,4 @@ if ! type otel4netcat_http 1> /dev/null 2> /dev/null; then
   otel4netcat_http() { "$@"; }
 fi
 export PATH="/usr/share/abomhttp:$PATH"
-otel4netcat_http ncat -l -k -c "abomhttp_serve '$directory' '$generator'" "$port"
+otel4netcat_http ncat -l -k --idle-timeout $((60 * 60))s -c "abomhttp_serve '$directory' '$generator'" "$port"

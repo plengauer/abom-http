@@ -30,7 +30,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v4.0.0
         with:
           name: package.deb
       - run: sudo apt-get update && sudo apt-get install ./package.deb
@@ -50,13 +50,13 @@ jobs:
         env:
           OTEL_EXPORTER_OTLP_ENDPOINT: '${{ secrets.OTEL_EXPORTER_OTLP_ENDPOINT }}'
           OTEL_EXPORTER_OTLP_HEADERS: '${{ secrets.OTEL_EXPORTER_OTLP_HEADERS }}'
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.0.0
       - run: echo "version=$(cat VERSION)" >> "$GITHUB_OUTPUT"
         id: version
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v4.0.0
         with:
           name: package.deb
-      - uses: actions/create-release@v1
+      - uses: actions/create-release@v1.0.0
         id: create_release
         env:
           GITHUB_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
@@ -65,7 +65,7 @@ jobs:
           release_name: Release v${{ steps.version.outputs.version }}
           draft: false
           prerelease: false
-      - uses: actions/upload-release-asset@v1
+      - uses: actions/upload-release-asset@v1.0.0
         id: upload-release-asset
         env:
           GITHUB_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN }}

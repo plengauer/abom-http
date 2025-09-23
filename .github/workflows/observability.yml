@@ -2,7 +2,7 @@ name: OpenTelemetry
 
 on:
   workflow_run:
-    workflows: [ 'Renovate', 'Autoversion', 'Autoapprove', 'Autorerun', 'Publish' ]
+    workflows: [Autoapprove, Autorerun, Autoversion, Publish, Renovate]
     types:
       - completed
 
@@ -10,7 +10,9 @@ jobs:
   export:
     runs-on: ubuntu-latest
     steps:
-      - uses: plengauer/opentelemetry-bash/actions/instrument/workflow@v5.27.0
+      - uses: plengauer/opentelemetry-github/actions/instrument/workflow@v5.27.0
         env:
           OTEL_EXPORTER_OTLP_ENDPOINT: '${{ secrets.OTEL_EXPORTER_OTLP_ENDPOINT }}'
           OTEL_EXPORTER_OTLP_HEADERS: '${{ secrets.OTEL_EXPORTER_OTLP_HEADERS }}'
+    permissions:
+      actions: read

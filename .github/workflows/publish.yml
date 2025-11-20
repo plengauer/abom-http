@@ -11,9 +11,9 @@ jobs:
       run:
         working-directory: ./src
     steps:
-      - uses: plengauer/opentelemetry-bash/actions/instrument/job@v5.35.0
+      - uses: /actions/instrument/job@v5.35.0
         with:
-          secrets_to_redact: '${{ toJSON(secrets) }}'
+          secrets_to_redact: '["${{ github.token }}"]'
         env:
           OTEL_EXPORTER_OTLP_ENDPOINT: '${{ secrets.OTEL_EXPORTER_OTLP_ENDPOINT }}'
           OTEL_EXPORTER_OTLP_HEADERS: '${{ secrets.OTEL_EXPORTER_OTLP_HEADERS }}'
@@ -25,28 +25,37 @@ jobs:
         with:
           name: package.deb
           path: package.deb
-
+    permissions:
+      actions: read
   test:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - uses: /actions/instrument/job@v5.35.0
+        env:
+          OTEL_EXPORTER_OTLP_ENDPOINT: ${{ secrets.OTEL_EXPORTER_OTLP_ENDPOINT }}
+          OTEL_EXPORTER_OTLP_HEADERS: ${{ secrets.OTEL_EXPORTER_OTLP_HEADERS }}
+        with:
+          secrets_to_redact: '["${{ github.token }}"]'
       - uses: actions/download-artifact@v6.0.0
         with:
           name: package.deb
       - run: sudo apt-get update && sudo apt-get install ./package.deb
       - uses: actions/checkout@v5
       - run: bash -e -c 'cd tests && bash test_all.sh'
-
+    permissions:
+      actions: read
   publish:
     if: github.ref == 'refs/heads/main'
     needs: test
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      actions: read
     steps:
-      - uses: plengauer/opentelemetry-bash/actions/instrument/job@v5.35.0
+      - uses: /actions/instrument/job@v5.35.0
         with:
-          secrets_to_redact: '${{ toJSON(secrets) }}'
+          secrets_to_redact: '["${{ github.token }}","${{ secrets.ACTIONS_GITHUB_TOKEN }}"]'
         env:
           OTEL_EXPORTER_OTLP_ENDPOINT: '${{ secrets.OTEL_EXPORTER_OTLP_ENDPOINT }}'
           OTEL_EXPORTER_OTLP_HEADERS: '${{ secrets.OTEL_EXPORTER_OTLP_HEADERS }}'

@@ -12,7 +12,7 @@ serve_via_handler() {
   local method="$2"
   local path_and_query="$3"
   if ! [ -x "$handler" ] && ! [ -x "$(which "$handler")" ]; then return 1; fi
-  if [ -n "$length" ]; then 
+  if [ -n "$length" ]; then
     head -c "$length" | sh -c "$1"' ''"$@"' "$handler" "$method" "$path_and_query" || serve_error 500 Internal Error
   else
     sh -c "$1"' ''"$@"' "$handler" "$method" "$path_and_query" || serve_error 500 Internal Error

@@ -9,7 +9,7 @@ jobs:
   bump:
     runs-on: ubuntu-latest
     steps:
-      - uses: plengauer/autorerun@v0.33.0
+      - uses: plengauer/autorerun@v0.34.0
         with:
           github_token: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
     permissions:

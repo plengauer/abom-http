@@ -9,6 +9,6 @@ jobs:
   bump:
     runs-on: ubuntu-slim
     steps:
-      - uses: plengauer/autoassign@v0.0.0
+      - uses: plengauer/autoassign@v0.1.0
         with:
           github_token: ${{ secrets.ACTIONS_GITHUB_TOKEN }}

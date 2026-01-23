@@ -41,7 +41,7 @@ jobs:
       contents: write
       actions: read
     steps:
-      - uses: actions/checkout@v6.0.1
+      - uses: actions/checkout@v6.0.2
       - run: echo "version=$(cat VERSION)" >> "$GITHUB_OUTPUT"
         id: version
       - uses: actions/download-artifact@v7.0.0

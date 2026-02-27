@@ -1,24 +1,17 @@
-name: Autorerun
 
 on:
-  workflow_dispatch:
-  schedule:
-    - cron: '0 0 * * *'
-
+  push:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
 jobs:
-  bump:
+  copilot-setup-steps:
     runs-on: ubuntu-latest
     steps:
       - uses: plengauer/opentelemetry-github/actions/instrument/job@v5.45.1
         env:
           OTEL_EXPORTER_OTLP_ENDPOINT: ${{ secrets.OTEL_EXPORTER_OTLP_ENDPOINT }}
           OTEL_EXPORTER_OTLP_HEADERS: ${{ secrets.OTEL_EXPORTER_OTLP_HEADERS }}
-        with:
-          secrets_to_redact: |-
-            ${{ github.token }}
-            ${{ secrets.ACTIONS_GITHUB_TOKEN }}
-      - uses: plengauer/autorerun@v0.37.0
-        with:
-          github_token: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
+      - run: |
+          :
     permissions:
       actions: read

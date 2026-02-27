@@ -2,7 +2,7 @@ name: OpenTelemetry
 
 on:
   workflow_run:
-    workflows: [Autoapprove, Autorerun, Autoversion, Publish, Renovate, Copilot coding agent]
+    workflows: [Autorerun, Autoversion, CI, CodeQL, Copilot code review, Copilot coding agent, Publish, Renovate]
     types:
       - completed
 
@@ -16,3 +16,4 @@ jobs:
           OTEL_EXPORTER_OTLP_HEADERS: '${{ secrets.OTEL_EXPORTER_OTLP_HEADERS }}'
     permissions:
       actions: read
+    container: ghcr.io/plengauer/opentelemetry-github-workflow-instrumentation-runner:v5.45.1

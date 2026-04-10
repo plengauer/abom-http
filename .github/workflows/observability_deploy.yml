@@ -9,7 +9,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     concurrency:
-      group: otel-deploy-job
+      group: otel-deploy-job-${{ github.ref_name }}
     steps:
       - uses: plengauer/opentelemetry-github/actions/instrument/job@v5.49.0
         env:

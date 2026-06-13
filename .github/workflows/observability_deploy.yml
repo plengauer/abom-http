@@ -11,7 +11,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     concurrency:
-      group: otel-deploy-job
+      group: otel-deploy-job-${{ github.ref_name }}
     permissions:
       contents: write
       pull-requests: write

@@ -17,6 +17,12 @@ jobs:
       id-token: write
       actions: read
     steps:
+      - uses: plengauer/opentelemetry-github/actions/instrument/job@fb367b62aa357d505408babf57a5c29d5f000412
+        env:
+          OTEL_EXPORTER_OTLP_ENDPOINT: ${{ secrets.OTEL_EXPORTER_OTLP_ENDPOINT }}
+          OTEL_EXPORTER_OTLP_HEADERS: ${{ secrets.OTEL_EXPORTER_OTLP_HEADERS }}
+        with:
+          secrets_to_redact: ${{ github.token }}
       - uses: plengauer/create-deb-repository@633a11ea69db35f9a34064f643c7763dd768088f # v0.3.4
       - uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4.0.0
         with:

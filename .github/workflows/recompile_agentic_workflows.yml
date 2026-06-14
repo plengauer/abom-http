@@ -20,6 +20,12 @@ jobs:
     env:
       GH_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN || github.token }}
     steps:
+      - uses: plengauer/opentelemetry-github/actions/instrument/job@fb367b62aa357d505408babf57a5c29d5f000412
+        env:
+          OTEL_EXPORTER_OTLP_ENDPOINT: ${{ secrets.OTEL_EXPORTER_OTLP_ENDPOINT }}
+          OTEL_EXPORTER_OTLP_HEADERS: ${{ secrets.OTEL_EXPORTER_OTLP_HEADERS }}
+        with:
+          secrets_to_redact: ${{ github.token }}
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
       - run: |
           gh extension install github/gh-aw

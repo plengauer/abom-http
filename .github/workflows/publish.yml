@@ -17,7 +17,7 @@ jobs:
       id-token: write
       actions: read
     steps:
-      - uses: plengauer/create-deb-repository@633a11ea69db35f9a34064f643c7763dd768088f # v0.3.4
+      - uses: plengauer/create-deb-repository@2d3d79460d6c590c0f4e0dac6419d268c7d7a83d # v1.0.0
       - uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4.0.0
         with:
           path: .

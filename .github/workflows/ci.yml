@@ -11,7 +11,7 @@ jobs:
       run:
         working-directory: ./src
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - run: sudo apt-get update && sudo apt-get install devscripts debhelper
       - run: sed -i "s/__VERSION__/$(cat ../VERSION)/g" DEBIAN/control
       - run: dpkg-deb --root-owner-group -Zgzip --build . ../package.deb
@@ -29,7 +29,7 @@ jobs:
         with:
           name: package.deb
       - run: sudo apt-get update && sudo apt-get install ./package.deb
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - run: bash -e -c 'cd tests && bash test_all.sh'
     permissions:
       actions: read
@@ -41,7 +41,7 @@ jobs:
       contents: write
       actions: read
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - run: echo "version=$(cat VERSION)" >> "$GITHUB_OUTPUT"
         id: version
       - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1

@@ -14,6 +14,12 @@ jobs:
       actions: read
       issues: write
     steps:
+      - uses: plengauer/opentelemetry-github/actions/instrument/job@fb367b62aa357d505408babf57a5c29d5f000412
+        env:
+          OTEL_EXPORTER_OTLP_ENDPOINT: ${{ secrets.OTEL_EXPORTER_OTLP_ENDPOINT }}
+          OTEL_EXPORTER_OTLP_HEADERS: ${{ secrets.OTEL_EXPORTER_OTLP_HEADERS }}
+        with:
+          secrets_to_redact: ${{ github.token }}
       - env:
           GH_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN || github.token }}
         run: |

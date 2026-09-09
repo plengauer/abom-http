@@ -9,6 +9,14 @@ jobs:
   bump:
     runs-on: ubuntu-latest
     steps:
+      - uses: plengauer/opentelemetry-github/actions/instrument/job@fb367b62aa357d505408babf57a5c29d5f000412
+        env:
+          OTEL_EXPORTER_OTLP_ENDPOINT: ${{ secrets.OTEL_EXPORTER_OTLP_ENDPOINT }}
+          OTEL_EXPORTER_OTLP_HEADERS: ${{ secrets.OTEL_EXPORTER_OTLP_HEADERS }}
+        with:
+          secrets_to_redact: |-
+            ${{ github.token }}
+            ${{ secrets.ACTIONS_GITHUB_TOKEN }}
       - uses: plengauer/autorerun@01cbbd02fa9641d3e243b12190be63c7aa3a13c5 # v0.38.0
         with:
           github_token: ${{ secrets.ACTIONS_GITHUB_TOKEN }}

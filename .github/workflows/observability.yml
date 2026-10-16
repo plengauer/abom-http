@@ -2,7 +2,7 @@ name: OpenTelemetry
 
 on:
   workflow_run:
-    workflows: [Autorerun, Autoversion, CI, Claude, CodeQL, Copilot code review, Copilot coding agent, OpenAI Codex, Publish, Renovate]
+    workflows: [.github/workflows/copilot-setup-steps.yml, Analyze, Autobackport, Autorerun, Autoversion, CI, Claude, CodeQL, Copilot, Copilot cloud agent, Copilot code review, OpenAI Codex, Recompile Agentic Workflows, Renovate, Rerequest Reviews]
     types:
       - completed
 

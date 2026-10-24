@@ -4,12 +4,9 @@ description: Automatically applies appropriate labels to newly created issues ba
 on:
   issues:
     types: [opened]
-  slash_command:
-    name: triage
-    events: [issue_comment]
   roles: all
-rate-limit:
-  max: 2
+user-rate-limit:
+  max-runs-per-window: 3
   window: 60
 permissions:
   contents: read
